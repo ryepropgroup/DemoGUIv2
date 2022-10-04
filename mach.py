@@ -24,7 +24,7 @@ abortbtn= tk.Button(text="ABORT", command=abort, foreground="#FF0000")
 ## COMMUNICATION CODE
 import socket, time
 
-HOST = "127.0.0.1"
+HOST = "169.254.105.149"
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 label.pack()
