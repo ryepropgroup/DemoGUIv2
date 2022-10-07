@@ -24,7 +24,7 @@ abortbtn= tk.Button(text="ABORT", command=abort, foreground="#FF0000")
 ## COMMUNICATION CODE
 import socket, time
 
-HOST = "169.254.105.149"
+HOST = ""
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 label.pack()
@@ -46,7 +46,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     with conn:
         print(f"Connected by {addr}")
         conn.send(b"Welcome to Borealis Mission Control")
-
         def receieve_data():
             received = conn.recv(1024)
             # all widgets to be packed to see on the window
@@ -58,4 +57,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         while True:
             receieve_data()
-
