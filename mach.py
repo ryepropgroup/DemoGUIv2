@@ -1,36 +1,36 @@
 import tkinter as tk
 
-win = tk.Tk() # win equals to a tkinter window
-HEIGHT = 600
-WIDTH = 480 
-win.title("MACH launching rockets!") # window title
-win.geometry(f'{HEIGHT}x{WIDTH}')
+# win = tk.Tk() # win equals to a tkinter window
+# HEIGHT = 600
+# WIDTH = 480 
+# win.title("MACH launching rockets!") # window title
+# win.geometry(f'{HEIGHT}x{WIDTH}')
 
-label = tk.Label(text="Borealis Mission Control!")
-data = tk.StringVar()
-data.set("hello")
-label2 = tk.Label(textvariable=data)
+# label = tk.Label(text="Borealis Mission Control!")
+# data = tk.StringVar()
+# data.set("hello")
+# label2 = tk.Label(textvariable=data)
 #buttons
-def launch_rocket(): # callback to run when btn clicked
-	print("🚀🚀🚀")
+# def launch_rocket(): # callback to run when btn clicked
+# 	print("🚀🚀🚀")
 
-def abort():
-    print("💥💥💥💥")
+# def abort():
+#     print("💥💥💥💥")
 
-button = tk.Button(text="Launch", command=launch_rocket)
-abortbtn= tk.Button(text="ABORT", command=abort, foreground="#FF0000")
+# button = tk.Button(text="Launch", command=launch_rocket)
+# abortbtn= tk.Button(text="ABORT", command=abort, foreground="#FF0000")
 
 
 ## COMMUNICATION CODE
 import socket, time
 
-HOST = ""
+HOST = "10.17.63.27"
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
-label.pack()
-label2.pack()
-button.pack()
-abortbtn.pack()
+# label.pack()
+# label2.pack()
+# button.pack()
+# abortbtn.pack()
 
 # def receieve_data():
 #         received = conn.recv(1024)
@@ -46,14 +46,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     with conn:
         print(f"Connected by {addr}")
         conn.send(b"Welcome to Borealis Mission Control")
-        def receieve_data():
-            received = conn.recv(1024)
-            # all widgets to be packed to see on the window
-            data.set(received.decode('utf-8'))
-            if not data:
-                return
-            print(received.decode('utf-8'))
-            win.update()
-
+        # s.recv()
         while True:
-            receieve_data()
+            num = input("enter a number: ")
+            conn.send(bytes(num, 'utf-8'))
+            time.sleep(1)
+            # win.update()
+
+        # while True:
+        #     receieve_data()
