@@ -16,16 +16,13 @@ def write_read(x):
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect ((HOST, PORT))
     data = s.recv(1024)
+    print(data.decode('utf-8'))
     if data.decode('utf-8') == 'Welcome to Borealis Mission Control':
         while True:
-            received = s.recv(1024)
-            # all widgets to be packed to see on the window
-            receieved = received.decode('utf-8')
-            if received:
-                while True:
-                    num = input("Enter a number: ")
-                    value = write_read(num)
-                    print(value)
+            data = s.recv(1024).decode('utf-8')
+            # num = input("Enter a number: ")
+            value = write_read(data)
+            print(value)
             
             
         # s.send(bytes(f'{time.time()}', 'utf-8'))
