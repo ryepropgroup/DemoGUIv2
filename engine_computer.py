@@ -19,9 +19,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print(data.decode('utf-8'))
     if data.decode('utf-8') == 'Welcome to Borealis Mission Control':
         while True:
-            data = s.recv(1024).decode('utf-8')
+            data = s.recv(1024)
             # num = input("Enter a number: ")
-            value = write_read(data)
+            value = write_read(data.decode('utf-8'))
             print(value)
             
             
