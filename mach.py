@@ -18,6 +18,7 @@ win.geometry(f'{HEIGHT}x{WIDTH}')
 #     print("💥💥💥💥")
 
 state = tk.StringVar()
+state.set("Close")
 
 button = tk.Button(text="Launch", command=lambda: state.set("Open"))
 abortbtn= tk.Button(text="ABORT", command=lambda: state.set("Close"), foreground="#FF0000")
