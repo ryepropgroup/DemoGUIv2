@@ -1,10 +1,10 @@
 import tkinter as tk
 
-# win = tk.Tk() # win equals to a tkinter window
-# HEIGHT = 600
-# WIDTH = 480 
-# win.title("MACH launching rockets!") # window title
-# win.geometry(f'{HEIGHT}x{WIDTH}')
+win = tk.Tk() # win equals to a tkinter window
+HEIGHT = 600
+WIDTH = 480 
+win.title("MACH") # window title
+win.geometry(f'{HEIGHT}x{WIDTH}')
 
 # label = tk.Label(text="Borealis Mission Control!")
 # data = tk.StringVar()
@@ -17,20 +17,22 @@ import tkinter as tk
 # def abort():
 #     print("💥💥💥💥")
 
-# button = tk.Button(text="Launch", command=launch_rocket)
-# abortbtn= tk.Button(text="ABORT", command=abort, foreground="#FF0000")
+state = tk.StringVar()
+
+button = tk.Button(text="Launch", command=lambda: state.set("Open"))
+abortbtn= tk.Button(text="ABORT", command=lambda: state.set("Close"), foreground="#FF0000")
 
 
 ## COMMUNICATION CODE
 import socket, time
 
-HOST = "10.17.63.27"
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+HOST = "127.0.0.1"
+PORT = 65431  # Port to listen on (non-privileged ports are > 1023)
 
 # label.pack()
 # label2.pack()
-# button.pack()
-# abortbtn.pack()
+button.pack()
+abortbtn.pack()
 
 # def receieve_data():
 #         received = conn.recv(1024)
@@ -48,10 +50,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         conn.send(b"Welcome to Borealis Mission Control")
         # s.recv()
         while True:
-            num = input("enter a number: ")
-            conn.send(bytes(num, 'utf-8'))
+            # num = input("enter a number: ")
+
+            conn.send(bytes(state.get(), 'utf-8'))
             time.sleep(1)
-            # win.update()
+            win.update()
 
         # while True:
         #     receieve_data()
