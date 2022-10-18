@@ -1,9 +1,9 @@
-import threading, socket
+import threading, socket, sys
+import tkinter as tk
 
 HOST = "127.0.0.1"
 PORT = 65432
 conn = None
-res = ""
 def connection():
     global conn
     global res
@@ -11,43 +11,55 @@ def connection():
         try:
             s.bind((HOST, PORT))
         except Exception:
-            print("quitting")
+            print("unable to open port on host")
+            return
         s.listen()
         conn, addr = s.accept()
         with conn:
             print(f"Connected by {addr}")
+            # connect_button.pack_forget()
+            connected()
             conn.sendall(b"Welcome to Borealis Mission Control")
             # s.recv()
             while True:
-                res = conn.recv(1024).decode('utf-8')
-                if not res:
-                    break
-                # win.update()
+                rec = conn.recv(1024).decode('utf-8')
+                res.set(rec)
+                if not rec:
+                    sys.exit(1)
 
 
 connection_thread = threading.Thread(target=connection, daemon=True)
-def start_connection_thread():
+def connect():
     connection_thread.start()
 
-# connection_thread.daemon=True
-import tkinter as tk
-# def gui():
+def connected():
+    button.pack()
+    tex.pack()
+    quit_button.pack()
+    win.title("Connected to BOREALIS")
+    connect_button.pack_forget()
+
+def disconnect():
+    conn.send(b"quit")
+    sys.exit(1)
+    connect_button.pack()
+
 win = tk.Tk()
 HEIGHT = 600
 WIDTH = 480 
 win.title("MACH")
 win.geometry(f'{HEIGHT}x{WIDTH}')
 button = tk.Button(text="Launch", command=lambda: conn.send(b"hello"))
+res = tk.StringVar()
+connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
+quit_button = tk.Button(text="Disconnect", command=disconnect)
 
-connect_button = tk.Button(text="CONNECT TO BOREALIS", command=start_connection_thread)
-quit_button = tk.Button(text="QUIT", command=lambda: conn.send(b"quit"))
-
-tex = tk.Label(text=res)
+tex = tk.Label(textvariable=res)
 connect_button.pack()
-button.pack()
-tex.pack()
+# button.pack()
+# tex.pack()
 
-quit_button.pack()
+# quit_button.pack()
 win.mainloop()
 
 
