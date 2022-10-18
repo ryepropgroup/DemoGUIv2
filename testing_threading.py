@@ -1,7 +1,7 @@
 import threading, socket, sys
 import tkinter as tk
 
-HOST = "127.0.0.1"
+HOST = "10.42.0.40"
 PORT = 65432
 conn = None
 def connection():
