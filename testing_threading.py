@@ -1,7 +1,7 @@
 import threading, socket, sys
 import tkinter as tk
 
-HOST = "169.254.205.14"
+HOST = "127.0.0.1"
 PORT = 65432
 conn = None
 def connection():
@@ -30,12 +30,7 @@ def connection():
 
 connection_thread = threading.Thread(target=connection, daemon=True)
 def connect():
-    try:
-        print("Waiting to connect...")
-        connection_thread.start()
-    except:
-        print("Already waiting...")
-        # pass
+    connection_thread.start()
 
 def connected():
     button.pack()
@@ -54,7 +49,7 @@ HEIGHT = 600
 WIDTH = 480 
 win.title("MACH")
 win.geometry(f'{HEIGHT}x{WIDTH}')
-button = tk.Button(text="Launch", command=lambda: conn.send(b"Open"))
+button = tk.Button(text="Launch", command=lambda: conn.send(b"hello"))
 res = tk.StringVar()
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)
