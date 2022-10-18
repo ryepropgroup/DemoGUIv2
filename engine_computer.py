@@ -1,8 +1,8 @@
 import socket, time, serial 
 
 HOST = "127.0.0.1"
-# The server's hostname or IP address
-PORT = 65431 # The port used by the server
+# The servers hostname or IP address
+PORT = 65432 # The port used by the server
 
 # arduino = serial.Serial(port='COM4', baudrate=115200, timeout=.1)
 
@@ -21,11 +21,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         while True:
             data = s.recv(1024)
             print(data.decode('utf-8'))
-            # num = input("Enter a number: ")
-            # value = write_read(data.decode('utf-8'))
-            # print(value)
-            
-            
-        # s.send(bytes(f'{time.time()}', 'utf-8'))
-        # print(f"sent data")
-        # time.sleep(1)
+            if data == b"hello":
+                s.sendall(b'bye bye')
+            if data == b"quit":
+                s.close()
+                exit()
