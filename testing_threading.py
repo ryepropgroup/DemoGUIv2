@@ -11,7 +11,7 @@ def connection():
         try:
             s.bind((HOST, PORT))
         except Exception:
-            print("unable to open port on host")
+            print("Exception Error: Unable to Open Specified Port: "+PORT)
             return
         s.listen()
         conn, addr = s.accept()
@@ -35,6 +35,7 @@ def connect():
 
 def connected():
     button.pack()
+    button2.pack()
     tex.pack()
     quit_button.pack()
     win.title("Connected to BOREALIS")
@@ -51,7 +52,8 @@ HEIGHT = 600
 WIDTH = 480 
 win.title("MACH")
 win.geometry(f'{HEIGHT}x{WIDTH}')
-button = tk.Button(text="Launch", command=lambda: conn.send(b"hello"))
+button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
+button2 = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
 res = tk.StringVar()
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)
