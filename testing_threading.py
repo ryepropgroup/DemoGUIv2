@@ -25,6 +25,7 @@ def connection():
                 rec = conn.recv(1024).decode('utf-8')
                 res.set(rec)
                 if not rec:
+                    conn.close()
                     sys.exit(1)
 
 
@@ -41,6 +42,7 @@ def connected():
 
 def disconnect():
     conn.send(b"quit")
+    conn.close()
     sys.exit(1)
     connect_button.pack()
 
