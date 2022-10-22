@@ -11,7 +11,7 @@ def connection():
         try:
             s.bind((HOST, PORT))
         except Exception:
-            print("Exception Error: Unable to Open Specified Port: "+PORT)
+            print("Exception Error: Unable to Open Specified Port: "+str(PORT))
             return
         s.listen()
         conn, addr = s.accept()
@@ -19,7 +19,7 @@ def connection():
             print(f"Connected by {addr}")
             # connect_button.pack_forget()
             connected()
-            conn.sendall(b"Welcome to Borealis Mission Control")
+#            conn.sendall(b"Welcome to Borealis Mission Control")
             # s.recv()
             while True:
                 rec = conn.recv(1024).decode('utf-8')
