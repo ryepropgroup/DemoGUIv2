@@ -4,6 +4,8 @@ import tkinter as tk
 HOST = "10.42.0.40"
 PORT = 65432
 conn = None
+
+
 def connection():
     global conn
     global res
@@ -11,7 +13,7 @@ def connection():
         try:
             s.bind((HOST, PORT))
         except Exception:
-            print("Exception Error: Unable to Open Specified Port: "+str(PORT))
+            print("Exception Error: Unable to Open Specified Port: " + str(PORT))
             return
         s.listen()
         conn, addr = s.accept()
@@ -19,10 +21,10 @@ def connection():
             print(f"Connected by {addr}")
             # connect_button.pack_forget()
             connected()
-#            conn.sendall(b"Welcome to Borealis Mission Control")
+            #            conn.sendall(b"Welcome to Borealis Mission Control")
             # s.recv()
             while True:
-                rec = conn.recv(1024).decode('utf-8')
+                rec = conn.recv(1024).decode("utf-8")
                 res.set(rec)
                 if not rec:
                     conn.close()
@@ -30,8 +32,11 @@ def connection():
 
 
 connection_thread = threading.Thread(target=connection, daemon=True)
+
+
 def connect():
     connection_thread.start()
+
 
 def connected():
     button.pack()
@@ -41,17 +46,19 @@ def connected():
     win.title("Connected to BOREALIS")
     connect_button.pack_forget()
 
+
 def disconnect():
     conn.send(b"quit")
     conn.close()
     sys.exit(1)
     connect_button.pack()
 
+
 win = tk.Tk()
 HEIGHT = 600
-WIDTH = 480 
+WIDTH = 480
 win.title("MACH")
-win.geometry(f'{HEIGHT}x{WIDTH}')
+win.geometry(f"{HEIGHT}x{WIDTH}")
 button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
 button2 = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
 res = tk.StringVar()
