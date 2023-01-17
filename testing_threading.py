@@ -1,9 +1,11 @@
 import threading, socket, sys
 import tkinter as tk
 
-HOST = "169.254.205.14"
+HOST = "10.42.0.40"
 PORT = 65432
 conn = None
+
+
 def connection():
     global conn
     global res
@@ -11,7 +13,7 @@ def connection():
         try:
             s.bind((HOST, PORT))
         except Exception:
-            print("unable to open port on host")
+            print("Exception Error: Unable to Open Specified Port: " + str(PORT))
             return
         s.listen()
         conn, addr = s.accept()
@@ -19,42 +21,46 @@ def connection():
             print(f"Connected by {addr}")
             # connect_button.pack_forget()
             connected()
-            conn.sendall(b"Welcome to Borealis Mission Control")
+            #            conn.sendall(b"Welcome to Borealis Mission Control")
             # s.recv()
             while True:
-                rec = conn.recv(1024).decode('utf-8')
+                rec = conn.recv(1024).decode("utf-8")
                 res.set(rec)
                 if not rec:
+                    conn.close()
                     sys.exit(1)
 
 
 connection_thread = threading.Thread(target=connection, daemon=True)
+
+
 def connect():
-    try:
-        print("Waiting to connect...")
-        connection_thread.start()
-    except:
-        print("Already waiting...")
-        # pass
+    connection_thread.start()
+
 
 def connected():
     button.pack()
+    button2.pack()
     tex.pack()
     quit_button.pack()
     win.title("Connected to BOREALIS")
     connect_button.pack_forget()
 
+
 def disconnect():
     conn.send(b"quit")
+    conn.close()
     sys.exit(1)
     connect_button.pack()
 
+
 win = tk.Tk()
 HEIGHT = 600
-WIDTH = 480 
+WIDTH = 480
 win.title("MACH")
-win.geometry(f'{HEIGHT}x{WIDTH}')
-button = tk.Button(text="Launch", command=lambda: conn.send(b"Open"))
+win.geometry(f"{HEIGHT}x{WIDTH}")
+button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
+button2 = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
 res = tk.StringVar()
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)

@@ -1,4 +1,4 @@
-# import socket, serial, time
+import socket, serial, time
 
 # HOST = "10.42.0.40"
 # # The servers hostname or IP address
@@ -13,16 +13,16 @@
 #     return data
 
 
-# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-#     s.connect ((HOST, PORT))
-#     data = s.recv(1024)
-#     print(data.decode('utf-8'))
-#     if data.decode('utf-8') == 'Welcome to Borealis Mission Control':
-#         while True:
-#             data = s.recv(1024)
-#             print(data.decode('utf-8'))
-#             if data == b"hello":
-#                 write_read("1")
-#             if data == b"quit":
-#                 s.close()
-#                 exit()
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect ((HOST, PORT))
+    data = s.recv(1024)
+    print(data.decode('utf-8'))
+    if data.decode('utf-8') == 'Welcome to Borealis Mission Control':
+        while True:
+            data = s.recv(1024)
+            print(data.decode('utf-8'))
+            if data == b"Open":
+                s.sendall(b'valves opened')
+            if data == b"quit":
+                s.close()
+                exit()
