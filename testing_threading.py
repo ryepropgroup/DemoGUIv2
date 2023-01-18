@@ -1,14 +1,15 @@
-import threading, socket, sys
+import threading
+import socket
+import sys
 import tkinter as tk
 import time
 import json
-import asyncio
 import re
 
 HOST = "172.20.10.10"
 PORT = 65432
 conn = None
-LENGTH_OF_RECV = 24
+LENGTH_OF_RECV = 49
 resp = b""
 old_resp = b""
 
@@ -27,34 +28,10 @@ def connection():
         with conn:
             print(f"Connected by {addr}")
             connected()
-            # HEADERSIZE = 0
-            # while True:
-            #     full_msg = ""
-            #     new_msg = True
-            #     while True:
-            #         msg = conn.recv(16)
-            #         if new_msg:
-            #             print("new msg len:", msg[:HEADERSIZE])
-            #             msglen = int(msg[:HEADERSIZE])
-            #             new_msg = False
-
-            #         print(f"full message length: {msglen}")
-
-            #         full_msg += msg.decode("utf-8")
-
-            #         print(len(full_msg))
-
-            #         if len(full_msg) - HEADERSIZE == msglen:
-            #             print("full msg recvd")
-            #             print(full_msg[HEADERSIZE:])
-            #             new_msg = True
-            #             full_msg = ""
-
             while True:
 
                 time.sleep(0.001)
                 resp = conn.recv(LENGTH_OF_RECV)
-                # res.set(resp2["val"])
                 get_refined_data(resp)
                 if not resp:
                     conn.close()
@@ -63,9 +40,17 @@ def connection():
 
 def get_refined_data(new_data):
     global old_resp
-    data = re.search("\{(.*?)\}", old_resp + new_data)
-    val = json.loads(data)
-    print(val["val"])
+    # print(old_resp.decode("utf=8") + new_data.decode("utf-8"))
+    data = re.findall("\{(.*?)\}", old_resp.decode("utf=8") + new_data.decode("utf-8"))
+    # print(data)
+    if data:
+        val = json.loads("{" + data[0] + "}")
+        # textValue.set(val["val"], end=" ")
+        print(f"tc: {val['tc']}", end=" ")
+        print(f"p1: {val['p1']}", end=" ")
+        print(f"p2: {val['p2']}", end=" ")
+        print(f"p3: {val['p3']}", end=" ")
+        print()
     old_resp = new_data
 
 
@@ -87,7 +72,6 @@ def disconnect():
     conn.send(b"quit")
     conn.close()
     sys.exit(1)
-    connect_button.pack()
 
 
 win = tk.Tk()
