@@ -63,7 +63,7 @@ def connection():
 
 def get_refined_data(new_data):
     global old_resp
-    data = re.search("{*}", old_resp + new_data)
+    data = re.search("\{(.*?)\}", old_resp + new_data)
     val = json.loads(data)
     print(val["val"])
     old_resp = new_data
