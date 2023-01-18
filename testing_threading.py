@@ -1,14 +1,21 @@
 import threading, socket, sys
 import tkinter as tk
+import time
+import json
+import asyncio
+import re
 
-HOST = "10.42.0.40"
+HOST = "172.20.10.10"
 PORT = 65432
 conn = None
+LENGTH_OF_RECV = 24
+resp = b""
+old_resp = b""
 
 
 def connection():
     global conn
-    global res
+    global resp
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
             s.bind((HOST, PORT))
@@ -19,29 +26,58 @@ def connection():
         conn, addr = s.accept()
         with conn:
             print(f"Connected by {addr}")
-            # connect_button.pack_forget()
             connected()
-            #            conn.sendall(b"Welcome to Borealis Mission Control")
-            # s.recv()
+            # HEADERSIZE = 0
+            # while True:
+            #     full_msg = ""
+            #     new_msg = True
+            #     while True:
+            #         msg = conn.recv(16)
+            #         if new_msg:
+            #             print("new msg len:", msg[:HEADERSIZE])
+            #             msglen = int(msg[:HEADERSIZE])
+            #             new_msg = False
+
+            #         print(f"full message length: {msglen}")
+
+            #         full_msg += msg.decode("utf-8")
+
+            #         print(len(full_msg))
+
+            #         if len(full_msg) - HEADERSIZE == msglen:
+            #             print("full msg recvd")
+            #             print(full_msg[HEADERSIZE:])
+            #             new_msg = True
+            #             full_msg = ""
+
             while True:
-                rec = conn.recv(1024).decode("utf-8")
-                res.set(rec)
-                if not rec:
+
+                time.sleep(0.001)
+                resp = conn.recv(LENGTH_OF_RECV)
+                # res.set(resp2["val"])
+                get_refined_data(resp)
+                if not resp:
                     conn.close()
                     sys.exit(1)
 
 
-connection_thread = threading.Thread(target=connection, daemon=True)
+def get_refined_data(new_data):
+    global old_resp
+    data = re.search("{*}", old_resp + new_data)
+    val = json.loads(data)
+    print(val["val"])
+    old_resp = new_data
 
 
 def connect():
+    connection_thread = threading.Thread(target=connection, daemon=True)
     connection_thread.start()
 
 
 def connected():
     button.pack()
     button2.pack()
-    tex.pack()
+    text.pack()
     quit_button.pack()
     win.title("Connected to BOREALIS")
     connect_button.pack_forget()
@@ -61,19 +97,11 @@ win.title("MACH")
 win.geometry(f"{HEIGHT}x{WIDTH}")
 button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
 button2 = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
-res = tk.StringVar()
+textValue = tk.StringVar()
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)
 
-tex = tk.Label(textvariable=res)
+text = tk.Label(textvariable=textValue)
 connect_button.pack()
-# button.pack()
-# tex.pack()
 
-# quit_button.pack()
 win.mainloop()
-
-
-# gui_thread = threading.Thread(target=gui)
-# gui_thread.daemon=True
-# gui_thread.start()
