@@ -6,7 +6,7 @@ import time
 import json
 import re
 
-HOST = "172.20.10.10"
+HOST = "10.0.0.2"
 PORT = 65432
 conn = None
 LENGTH_OF_RECV = 49
