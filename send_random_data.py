@@ -1,6 +1,7 @@
 import socket
 import time
 import random
+import json
 
 HOST = "127.0.0.1"
 PORT = 6543
@@ -15,5 +16,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         a["p2"] = "0" + str(random.randint(500, 700))
         a["p3"] = "0" + str(random.randint(700, 999))
 
-        s.send(str(a).encode("utf-8"))
-        time.sleep(0.001)
+        s.send(json.dumps(a).encode("utf-8"))
+        # if s.recv(1024).decode("utf-8") == "quit":
+        #     s.close()
+        #     exit()
+        time.sleep(0.05)
