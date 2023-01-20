@@ -3,8 +3,8 @@ import time
 import random
 import json
 
-HOST = "127.0.0.1"
-PORT = 6543
+HOST = "10.0.0.2"
+PORT = 65432
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     a = {"tc": 0, "p1": 0, "p2": 0, "p3": 0}

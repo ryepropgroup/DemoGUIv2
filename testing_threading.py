@@ -1,27 +1,28 @@
 import threading
-import socket
 import sys
 import tkinter as tk
 import time
 import json
 import re
 from tkinter.font import Font
+import socket
+from functools import partial
 
-HOST = "127.0.0.1"
-PORT = 6543
+HOST = "10.0.0.2"
+PORT = 65432
 conn = None
-LENGTH_OF_RECV = 64
+LENGTH_OF_RECV = 37
 resp = b""
 old_resp = b""
 win = tk.Tk()
-
+valve_commands = "abcdefghij"
 header_font = Font(family="Montserrat", size=24, weight="bold")
 base_font = Font(family="Montserrat", size=18)
 win.option_add("*Font", base_font)
 
 
-HEIGHT = 600
-WIDTH = 480
+HEIGHT = 800
+WIDTH = 600
 win.title("MACH")
 win.geometry(f"{HEIGHT}x{WIDTH}")
 
@@ -65,7 +66,6 @@ def get_refined_data(new_data: bytes):
         p1Value.set(val["p1"])
         p2Value.set(val["p2"])
         p3Value.set(val["p3"])
-        print(f"tc: {val['tc']}", end=" ")
         print(f"p1: {val['p1']}", end=" ")
         print(f"p2: {val['p2']}", end=" ")
         print(f"p3: {val['p3']}", end=" ")
@@ -91,28 +91,64 @@ def connected():
     p1text.pack(side=tk.BOTTOM)
     p2text.pack(side=tk.BOTTOM)
     p3text.pack(side=tk.BOTTOM)
-    open_button.pack()
-    close_button.pack()
-    quit_button.pack(side=tk.BOTTOM)
+    control_frame.pack()
+    button_text.pack()
+    open_buttons_frame.pack()
+    close_buttons_frame.pack()
+    for i in range(len(o_buttons)):
+        o_buttons[i].pack(side=tk.LEFT)
+        c_buttons[i].pack(side=tk.LEFT)
+    # open_button.pack()
+    # close_button.pack()
+    quit_button.pack(side=tk.BOTTOM, pady=20)
     win.title("Connected to BOREALIS")
     connect_button.pack_forget()
 
 
 def disconnect():
-    # conn.send(b"quit")
-    conn.close()
+    conn.send(b"quit")
     sys.exit(1)
+
+
+def button_command(val):
+    conn.send(val)
 
 
 telemetry_frame = tk.Frame(win)
 p1Frame = tk.Frame(telemetry_frame)
 p2Frame = tk.Frame(telemetry_frame)
 p3Frame = tk.Frame(telemetry_frame)
-open_button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
-close_button = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
+control_frame = tk.Frame(win)
+open_buttons_frame = tk.Frame(control_frame)
+close_buttons_frame = tk.Frame(control_frame)
+o_buttons = []
+c_buttons = []
+for j in range(10):
+    o_buttons.append(
+        tk.Button(
+            open_buttons_frame,
+            text="Open " + str(j + 1),
+            # command=lambda: conn.send(f"{valve_commands[i]}".encode("utf-8")),
+            command=partial(button_command, f"{valve_commands[j]}".encode("utf-8")),
+        )
+    )
+    c_buttons.append(
+        tk.Button(
+            close_buttons_frame,
+            text="Close " + str(j + 1),
+            # command=lambda: conn.send(f"{valve_commands[i]}".encode("utf-8")),
+            command=partial(
+                button_command, f"{valve_commands[j].upper()}".encode("utf-8")
+            ),
+        )
+    )
+
+# open_button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
+# close_button = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)
 telemetry_text = tk.Label(text="Telemetry", font=header_font)
+button_text = tk.Label(text="Control", font=header_font)
 p1text = tk.Label(p1Frame, textvariable=p1Value)
 p2text = tk.Label(p2Frame, textvariable=p2Value)
 p3text = tk.Label(p3Frame, textvariable=p3Value)
