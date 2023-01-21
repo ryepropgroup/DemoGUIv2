@@ -24,29 +24,37 @@ from tkinter.font import Font
 #
 import socket
 from functools import partial
+from collections import deque
 
-HOST = "10.0.0.2"
+HOST = "127.0.0.1"
 PORT = 65432
 conn = None
-LENGTH_OF_RECV = 37
+LENGTH_OF_RECV = 64
 resp = b""
 old_resp = b""
 win = tk.Tk()
 valve_commands = "abcdefghij"
 header_font = Font(family="Montserrat", size=24, weight="bold")
 base_font = Font(family="Montserrat", size=18)
+button_font = Font(family="Montserrat", size=14)
 win.option_add("*Font", base_font)
 
 
-HEIGHT = 800
-WIDTH = 600
+HEIGHT = 600
+WIDTH = 1000
 win.title("MACH")
-win.geometry(f"{HEIGHT}x{WIDTH}")
+win.geometry(f"{WIDTH}x{HEIGHT}")
 
 p1Value = tk.StringVar()
 p2Value = tk.StringVar()
 p3Value = tk.StringVar()
+p1ValueMin = tk.StringVar()
+p2ValueMin = tk.StringVar()
+p3ValueMin = tk.StringVar()
 _stop = False
+p1Rolling = deque([], maxlen=100)
+p2Rolling = deque([], maxlen=100)
+p3Rolling = deque([], maxlen=100)
 
 
 def connection():
@@ -80,9 +88,18 @@ def get_refined_data(new_data: bytes):
     # print(data)
     if data:
         val = json.loads("{" + data[0] + "}")
-        p1Value.set(val["p1"])
-        p2Value.set(val["p2"])
-        p3Value.set(val["p3"])
+        p1Rolling.append(int(val["p1"]))
+        p2Rolling.append(int(val["p2"]))
+        p3Rolling.append(int(val["p3"]))
+        p1Value.set("MAX: " + str(max(p1Rolling)))
+        p2Value.set("MAX: " + str(max(p2Rolling)))
+        p3Value.set("MAX: " + str(max(p3Rolling)))
+        p1ValueMin.set("MIN: " + str(min(p1Rolling)))
+        p2ValueMin.set("MIN: " + str(min(p2Rolling)))
+        p3ValueMin.set("MIN: " + str(min(p3Rolling)))
+        p1text.config(foreground=get_color("p1", max(p1Rolling)))
+        p2text.config(foreground=get_color("p2", max(p1Rolling)))
+        p3text.config(foreground=get_color("p3", max(p1Rolling)))
         print(f"p1: {val['p1']}", end=" ")
         print(f"p2: {val['p2']}", end=" ")
         print(f"p3: {val['p3']}", end=" ")
@@ -99,15 +116,18 @@ def connected():
     telemetry_text.pack()
     telemetry_frame.pack()
     # telemetry_labels_frame.pack()
-    p1Frame.pack(side=tk.LEFT)
-    p2Frame.pack(side=tk.LEFT)
-    p3Frame.pack(side=tk.LEFT)
+    p1Frame.pack(side=tk.LEFT, padx=40)
+    p2Frame.pack(side=tk.LEFT, padx=40)
+    p3Frame.pack(side=tk.LEFT, padx=40)
     p1label.pack(side=tk.TOP)
     p2label.pack(side=tk.TOP)
     p3label.pack(side=tk.TOP)
     p1text.pack(side=tk.BOTTOM)
+    p1textmin.pack(side=tk.BOTTOM)
     p2text.pack(side=tk.BOTTOM)
+    p2textmin.pack(side=tk.BOTTOM)
     p3text.pack(side=tk.BOTTOM)
+    p3textmin.pack(side=tk.BOTTOM)
     button_text.pack()
     control_frame.pack()
     open_buttons_frame.pack()
@@ -125,6 +145,28 @@ def connected():
 def disconnect():
     conn.send(b"quit")
     sys.exit(1)
+
+
+def get_color(pressure, x):
+    red = "#f00"
+    green = "#0f0"
+    orange = "#f80"
+    if pressure == "p1":
+        if x >= 2500:
+            return red
+        elif x >= 2300:
+            return orange
+    elif pressure == "p2":
+        if x >= 1600:
+            return red
+        elif x >= 1400:
+            return orange
+    elif pressure == "p3":
+        if x >= 1600:
+            return red
+        elif x >= 1400:
+            return orange
+    return green
 
 
 def button_command(val):
@@ -147,6 +189,7 @@ for j in range(10):
             text="Open " + str(j + 1),
             # command=lambda: conn.send(f"{valve_commands[i]}".encode("utf-8")),
             command=partial(button_command, f"{valve_commands[j]}".encode("utf-8")),
+            font=button_font,
         )
     )
     c_buttons.append(
@@ -157,6 +200,7 @@ for j in range(10):
             command=partial(
                 button_command, f"{valve_commands[j].upper()}".encode("utf-8")
             ),
+            font=button_font,
         )
     )
 
@@ -169,6 +213,9 @@ button_text = tk.Label(text="Control", font=header_font)
 p1text = tk.Label(p1Frame, textvariable=p1Value)
 p2text = tk.Label(p2Frame, textvariable=p2Value)
 p3text = tk.Label(p3Frame, textvariable=p3Value)
+p1textmin = tk.Label(p1Frame, textvariable=p1ValueMin)
+p2textmin = tk.Label(p2Frame, textvariable=p2ValueMin)
+p3textmin = tk.Label(p3Frame, textvariable=p3ValueMin)
 p1label = tk.Label(p1Frame, text="P1")
 p2label = tk.Label(p2Frame, text="P2")
 p3label = tk.Label(p3Frame, text="P3")
