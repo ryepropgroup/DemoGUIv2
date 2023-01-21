@@ -1,24 +1,24 @@
-#allows different parts of program to run concurrently 
+# allows different parts of program to run concurrently
 import threading
 
-#provides various fucntions and variables that are used to manipulate diff parts of
-#the python runtime environment
+# provides various fucntions and variables that are used to manipulate diff parts of
+# the python runtime environment
 
 import sys
 
-#import tkinter GUI 
+# import tkinter GUI
 import tkinter as tk
 
-#adds time module, allowing python to work with time 
+# adds time module, allowing python to work with time
 import time
 
-#module that enables us to work with JSON data
+# module that enables us to work with JSON data
 import json
 
-#module that provides regular expression matching operations 
+# module that provides regular expression matching operations
 import re
 
-#allows us to work with fonts FROM tkinter module
+# allows us to work with fonts FROM tkinter module
 from tkinter.font import Font
 
 #
@@ -108,8 +108,8 @@ def connected():
     p1text.pack(side=tk.BOTTOM)
     p2text.pack(side=tk.BOTTOM)
     p3text.pack(side=tk.BOTTOM)
-    control_frame.pack()
     button_text.pack()
+    control_frame.pack()
     open_buttons_frame.pack()
     close_buttons_frame.pack()
     for i in range(len(o_buttons)):
