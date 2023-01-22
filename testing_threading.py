@@ -26,6 +26,9 @@ import socket
 from functools import partial
 from collections import deque
 
+from PIL import ImageTk, Image
+
+
 HOST = "127.0.0.1"
 PORT = 65432
 conn = None
@@ -113,6 +116,7 @@ def connect():
 
 
 def connected():
+    
     telemetry_text.pack()
     telemetry_frame.pack()
     # telemetry_labels_frame.pack()
@@ -214,6 +218,8 @@ for j in range(10):
 
 # open_button = tk.Button(text="Open Valves", command=lambda: conn.send(b"open"))
 # close_button = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
+img = ImageTk.PhotoImage(Image.open("mach_logo.png"))
+image_label = tk.Label(image=img)
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)
 telemetry_text = tk.Label(text="Telemetry", font=header_font)
@@ -229,6 +235,7 @@ p3textmin = tk.Label(p3Frame, textvariable=p3ValueMin)
 p1label = tk.Label(p1Frame, text="P1")
 p2label = tk.Label(p2Frame, text="P2")
 p3label = tk.Label(p3Frame, text="P3")
+image_label.pack()
 connect_button.pack()
 win.mainloop()
 _stop = True
