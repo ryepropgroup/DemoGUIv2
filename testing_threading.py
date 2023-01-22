@@ -253,6 +253,7 @@ for j in range(10):
             font=button_font, 
             padx=10,
             pady=10,
+         
  
         )
     )
@@ -267,7 +268,7 @@ for j in range(10):
             font=button_font,
             padx= 10,
             pady=10, 
-            background= bgc
+           
 
 
         )
