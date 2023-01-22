@@ -181,10 +181,10 @@ def connected():
     off_text.pack()
     
     for i in range(len(o_buttons)):
-        o_buttons[i].configure(bg = bgc)
+        # o_buttons[i].configure(bg = bgc)
         o_buttons[i].pack(side=tk.LEFT)
 
-        c_buttons[i].configure(bg = bgc)
+        # c_buttons[i].configure(bg = bgc)
         c_buttons[i].pack(side=tk.LEFT)
     # open_button.pack()
     # close_button.pack()
@@ -287,7 +287,7 @@ connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 
 
 quit_button = tk.Button(text="Disconnect", command=disconnect)
-quit_button.configure(bg= bgc)
+
 
 telemetry_text = tk.Label(text="Telemetry", font=header_font)
 button_text = tk.Label(text="Control", font=header_font, fg = "white")
