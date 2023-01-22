@@ -304,7 +304,6 @@ p2label = tk.Label(p2Frame, text="P2")
 p3label = tk.Label(p3Frame, text="P3")
 image_label.pack()
 
-connect_button.configure(bg= bgc)
 connect_button.pack()
 win.mainloop()
 _stop = True
