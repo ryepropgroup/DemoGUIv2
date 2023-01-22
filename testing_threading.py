@@ -131,7 +131,10 @@ def connected():
     button_text.pack()
     control_frame.pack()
     open_buttons_frame.pack()
+    on_text.pack()
     close_buttons_frame.pack()
+    off_text.pack()
+    
     for i in range(len(o_buttons)):
         o_buttons[i].pack(side=tk.LEFT)
         c_buttons[i].pack(side=tk.LEFT)
@@ -179,6 +182,7 @@ p2Frame = tk.Frame(telemetry_frame)
 p3Frame = tk.Frame(telemetry_frame)
 control_frame = tk.Frame(win)
 open_buttons_frame = tk.Frame(control_frame)
+open_buttons_frame["pady"]=20
 close_buttons_frame = tk.Frame(control_frame)
 o_buttons = []
 c_buttons = []
@@ -190,6 +194,8 @@ for j in range(10):
             # command=lambda: conn.send(f"{valve_commands[i]}".encode("utf-8")),
             command=partial(button_command, f"{valve_commands[j]}".encode("utf-8")),
             font=button_font,
+            padx=10,
+            pady=10
         )
     )
     c_buttons.append(
@@ -201,6 +207,8 @@ for j in range(10):
                 button_command, f"{valve_commands[j].upper()}".encode("utf-8")
             ),
             font=button_font,
+            padx= 10,
+            pady=10
         )
     )
 
@@ -210,6 +218,8 @@ connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
 quit_button = tk.Button(text="Disconnect", command=disconnect)
 telemetry_text = tk.Label(text="Telemetry", font=header_font)
 button_text = tk.Label(text="Control", font=header_font)
+on_text = tk.Label(open_buttons_frame,text="On", font=header_font)
+off_text = tk.Label(close_buttons_frame,text="Off", font=header_font)
 p1text = tk.Label(p1Frame, textvariable=p1Value)
 p2text = tk.Label(p2Frame, textvariable=p2Value)
 p3text = tk.Label(p3Frame, textvariable=p3Value)
