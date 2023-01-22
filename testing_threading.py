@@ -47,6 +47,8 @@ HEIGHT = 600
 WIDTH = 1000
 win.title("MACH")
 win.geometry(f"{WIDTH}x{HEIGHT}")
+bgc = "#292D33"
+win.configure(bg="#292D33")
 
 p1Value = tk.StringVar()
 p2Value = tk.StringVar()
@@ -59,6 +61,7 @@ p1Rolling = deque([], maxlen=100)
 p2Rolling = deque([], maxlen=100)
 p3Rolling = deque([], maxlen=100)
 
+colours = [] 
 
 def connection():
     global conn
@@ -103,6 +106,7 @@ def get_refined_data(new_data: bytes):
         p1text.config(foreground=get_color("p1", max(p1Rolling)))
         p2text.config(foreground=get_color("p2", max(p1Rolling)))
         p3text.config(foreground=get_color("p3", max(p1Rolling)))
+    
         print(f"p1: {val['p1']}", end=" ")
         print(f"p2: {val['p2']}", end=" ")
         print(f"p3: {val['p3']}", end=" ")
@@ -117,30 +121,70 @@ def connect():
 
 def connected():
     
+    telemetry_frame.configure(bg= bgc)
+    telemetry_text.configure(bg= bgc, fg = "white")
     telemetry_text.pack()
     telemetry_frame.pack()
     # telemetry_labels_frame.pack()
+    p1Frame.configure(bg=bgc)
     p1Frame.pack(side=tk.LEFT, padx=40)
+
+    p2Frame.configure(bg= bgc)
     p2Frame.pack(side=tk.LEFT, padx=40)
+
+    p3Frame.configure(bg= bgc)
     p3Frame.pack(side=tk.LEFT, padx=40)
+
+    p1label.configure(bg= bgc, fg = "white")
     p1label.pack(side=tk.TOP)
+
+    p2label.configure(bg= bgc, fg = "white")
     p2label.pack(side=tk.TOP)
+
+    p3label.configure(bg= bgc, fg = "white")
     p3label.pack(side=tk.TOP)
+
+    p1text.configure(bg= bgc, fg= "white")
     p1text.pack(side=tk.BOTTOM)
+
+    p1textmin.configure(bg= bgc, fg="white")
     p1textmin.pack(side=tk.BOTTOM)
+
+    p2text.configure(bg= bgc)
     p2text.pack(side=tk.BOTTOM)
+
+    p2textmin.configure(bg= bgc, fg= "white")
     p2textmin.pack(side=tk.BOTTOM)
+
+    p3text.configure(bg= bgc)
     p3text.pack(side=tk.BOTTOM)
+
+    p3textmin.configure(bg= bgc, fg = "white")
     p3textmin.pack(side=tk.BOTTOM)
+
+    button_text.configure(bg= bgc)
     button_text.pack()
+
+    control_frame.configure(bg= bgc)
     control_frame.pack()
+
+    open_buttons_frame.configure(bg= bgc)
     open_buttons_frame.pack()
+
+    on_text.configure(bg= bgc, fg= "white")
     on_text.pack()
+
+    close_buttons_frame.configure(bg= bgc)
     close_buttons_frame.pack()
+
+    off_text.configure(bg= bgc, fg= "white")
     off_text.pack()
     
     for i in range(len(o_buttons)):
+        o_buttons[i].configure(bg = bgc)
         o_buttons[i].pack(side=tk.LEFT)
+
+        c_buttons[i].configure(bg = bgc)
         c_buttons[i].pack(side=tk.LEFT)
     # open_button.pack()
     # close_button.pack()
@@ -181,13 +225,22 @@ def button_command(val):
 
 
 telemetry_frame = tk.Frame(win)
+
+telemetry_frame.configure(bg = bgc)
+
 p1Frame = tk.Frame(telemetry_frame)
 p2Frame = tk.Frame(telemetry_frame)
 p3Frame = tk.Frame(telemetry_frame)
 control_frame = tk.Frame(win)
 open_buttons_frame = tk.Frame(control_frame)
-open_buttons_frame["pady"]=20
+open_buttons_frame["pady"]=20    
 close_buttons_frame = tk.Frame(control_frame)
+
+
+
+open_buttons_frame.configure(bg= bgc)
+close_buttons_frame.configure(bg= bgc)
+
 o_buttons = []
 c_buttons = []
 for j in range(10):
@@ -197,9 +250,10 @@ for j in range(10):
             text="Open " + str(j + 1),
             # command=lambda: conn.send(f"{valve_commands[i]}".encode("utf-8")),
             command=partial(button_command, f"{valve_commands[j]}".encode("utf-8")),
-            font=button_font,
+            font=button_font, 
             padx=10,
-            pady=10
+            pady=10,
+ 
         )
     )
     c_buttons.append(
@@ -212,7 +266,10 @@ for j in range(10):
             ),
             font=button_font,
             padx= 10,
-            pady=10
+            pady=10, 
+            background= bgc
+
+
         )
     )
 
@@ -220,10 +277,19 @@ for j in range(10):
 # close_button = tk.Button(text="Close Valves", command=lambda: conn.send(b"close"))
 img = ImageTk.PhotoImage(Image.open("mach_logo.png"))
 image_label = tk.Label(image=img)
+image_label.configure(bg= bgc)
+
+
 connect_button = tk.Button(text="CONNECT TO BOREALIS", command=connect)
+
+
+
+
 quit_button = tk.Button(text="Disconnect", command=disconnect)
+quit_button.configure(bg= bgc)
+
 telemetry_text = tk.Label(text="Telemetry", font=header_font)
-button_text = tk.Label(text="Control", font=header_font)
+button_text = tk.Label(text="Control", font=header_font, fg = "white")
 on_text = tk.Label(open_buttons_frame,text="On", font=header_font)
 off_text = tk.Label(close_buttons_frame,text="Off", font=header_font)
 p1text = tk.Label(p1Frame, textvariable=p1Value)
@@ -236,6 +302,8 @@ p1label = tk.Label(p1Frame, text="P1")
 p2label = tk.Label(p2Frame, text="P2")
 p3label = tk.Label(p3Frame, text="P3")
 image_label.pack()
+
+connect_button.configure(bg= bgc)
 connect_button.pack()
 win.mainloop()
 _stop = True
