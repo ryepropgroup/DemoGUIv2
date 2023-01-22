@@ -188,6 +188,9 @@ def connected():
         c_buttons[i].pack(side=tk.LEFT)
     # open_button.pack()
     # close_button.pack()
+    close_all_valves=tk.Button(text= "close all vales", val= "K")
+    
+    close_all_valves.pack(side=tk.bottom, pady=20)
     quit_button.pack(side=tk.BOTTOM, pady=20)
     win.title("Connected to BOREALIS")
     connect_button.pack_forget()
